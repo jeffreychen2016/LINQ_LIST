@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LINQ_LIST
 {
-    class Program
+    partial class Program
     {
         static void Main(string[] args)
         {
@@ -135,7 +135,79 @@ namespace LINQ_LIST
 
             Console.WriteLine("------------------------------------------------------------");
 
+            // Build a collection of customers who are millionaires
+            List<Customer1> customers1 = new List<Customer1>()
+            {
+                new Customer1(){ Name="Bob Lesman", Balance=80345.66, Bank="FTB"},
+                new Customer1(){ Name="Joe Landy", Balance=9284756.21, Bank="WF"},
+                new Customer1(){ Name="Meg Ford", Balance=487233.01, Bank="BOA"},
+                new Customer1(){ Name="Peg Vale", Balance=7001449.92, Bank="BOA"},
+                new Customer1(){ Name="Mike Johnson", Balance=790872.12, Bank="WF"},
+                new Customer1(){ Name="Les Paul", Balance=8374892.54, Bank="WF"},
+                new Customer1(){ Name="Sid Crosby", Balance=957436.39, Bank="FTB"},
+                new Customer1(){ Name="Sarah Ng", Balance=56562389.85, Bank="FTB"},
+                new Customer1(){ Name="Tina Fey", Balance=1000000.00, Bank="CITI"},
+                new Customer1(){ Name="Sid Brown", Balance=49582.68, Bank="CITI"}
+            };
+            /* 
+                Given the same customer set, display how many millionaires per bank.
+                Ref: https://stackoverflow.com/questions/7325278/group-by-in-linq
 
+                Example Output:
+                WF 2
+                BOA 1
+                FTB 1
+                CITI 1
+            */
+
+            // think of b as a temp table after grouping finished
+            var millionariesPerBank = from customer in customers1
+                                      where customer.Balance > 999999
+                                      group customer by customer.Bank into b
+                                      select b;
+
+            foreach (var bank in millionariesPerBank)
+            {
+                Console.WriteLine(bank.Key + ' ' + bank.Count());
+            }
+
+            Console.WriteLine("------------------------------------------------------------");
+
+            // Create some banks and store in a List
+
+            List<Bank> banks = new List<Bank>()
+            {
+                new Bank(){ Name="First Tennessee", Symbol="FTB"},
+                new Bank(){ Name="Wells Fargo", Symbol="WF"},
+                new Bank(){ Name="Bank of America", Symbol="BOA"},
+                new Bank(){ Name="Citibank", Symbol="CITI"},
+            };
+
+            // Create some customers and store in a List
+            List<Customer> customers = new List<Customer>()
+            {
+                new Customer(){ Name="Bob Lesman", Balance=80345.66, Bank="FTB"},
+                new Customer(){ Name="Joe Landy", Balance=9284756.21, Bank="WF"},
+                new Customer(){ Name="Meg Ford", Balance=487233.01, Bank="BOA"},
+                new Customer(){ Name="Peg Vale", Balance=7001449.92, Bank="BOA"},
+                new Customer(){ Name="Mike Johnson", Balance=790872.12, Bank="WF"},
+                new Customer(){ Name="Les Paul", Balance=8374892.54, Bank="WF"},
+                new Customer(){ Name="Sid Crosby", Balance=957436.39, Bank="FTB"},
+                new Customer(){ Name="Sarah Ng", Balance=56562389.85, Bank="FTB"},
+                new Customer(){ Name="Tina Fey", Balance=1000000.00, Bank="CITI"},
+                new Customer(){ Name="Sid Brown", Balance=49582.68, Bank="CITI"}
+            };
+
+
+            var millionaireReport = from bank in banks
+                                    join customer in customers on bank.Symbol equals customer.Bank
+                                    select new { customer.Name, customer.Bank };
+
+            foreach (var customer in millionaireReport)
+            {
+                //Console.WriteLine(customer.Name);
+                Console.WriteLine($"{customer.Name} at {customer.Bank}");
+            }
         }
     }
 }
