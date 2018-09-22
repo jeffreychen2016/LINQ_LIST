@@ -201,12 +201,12 @@ namespace LINQ_LIST
 
             var millionaireReport = from bank in banks
                                     join customer in customers on bank.Symbol equals customer.Bank
-                                    select new { customer.Name, customer.Bank };
+                                    select new { customerName = customer.Name, bankName = bank.Name};
 
-            foreach (var customer in millionaireReport)
+            foreach (var record in millionaireReport)
             {
                 //Console.WriteLine(customer.Name);
-                Console.WriteLine($"{customer.Name} at {customer.Bank}");
+                Console.WriteLine($"{record.customerName} at {record.bankName}");
             }
         }
     }
